@@ -17,7 +17,7 @@ class DatabaseHelper {
     //creazione db viene creato una volta sola
     return await openDatabase(path,
         version: 6,
-        onCreate: _onCreate,
+        onCreate: _onCreate,//Prima volta viene eseguito create(tutta la creazione del db), le volte succesive solo l'upgrade(solo le modifiche nell'ultima versione)
         onUpgrade: _onUpgrade
     );
   }
