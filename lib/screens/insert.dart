@@ -16,9 +16,9 @@ class InsertScreen extends StatefulWidget {
 class _InsertScreenState extends State<InsertScreen> {
 
   final _insertFormKey = GlobalKey<FormState>();
+
   final titleController = TextEditingController();
   final contentController = TextEditingController();
-
 
   String? _title;
   String? _content;
@@ -28,22 +28,20 @@ class _InsertScreenState extends State<InsertScreen> {
   String? _imagePath;
   final picker = ImagePicker();
 
-
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as EditNote;
-    if(args.note != null)
-      {
-        //note vuole il punto esclamativo perchè potrebbe essere null
-          print(args.note!.title);
-          titleController.text = args.note!.title;
-          contentController.text = args.note!.content!;
-          _image = args.note!.image;
-      }
-    else
-      {
-        print("nessun titolo");
-      }
+
+    final args = ModalRoute.of(context)!.settings.arguments as EditNoteArguments;
+
+    if(args.note != null) {
+      print(args.note!.title);
+      titleController.text = args.note!.title;
+      contentController.text = args.note!.content ?? '';
+      _image = args.note!.image;
+    } else {
+      print('Nessun titolo');
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Crea nota'),

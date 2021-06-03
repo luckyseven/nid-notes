@@ -66,9 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});//set state solo per refresh della schermata
   }
 
-  Widget _imageContainer(String? image) {
-    if (image != null) {
-      return Image.memory(base64.decode(image));
+  Widget _imageContainer(String? _imagePath) {
+    if (_imagePath != null) {
+      return Image.memory(base64.decode(_imagePath));
     }
     return SizedBox.shrink();
   }
@@ -89,12 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Card(
       child: Column(
         children: [
-
+          _imageContainer(notes[index]["image"]),
           Text(notes[index]["id"].toString() +
               ' ' +
               notes[index]["title"].toString()),
           Text(notes[index]["content"].toString()),
-          _imageContainer(notes[index]["image"]),
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
@@ -107,9 +106,17 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () async {
-              Navigator.of(context).pushNamed('/insert', arguments: EditNote(
-                  Note(notes[index]["title"].toString(), notes[index]["content"].toString(), id: notes[index]["id"], image: notes[index]["image"]),
-              ));
+              Navigator.of(context).pushNamed('/insert',
+                  arguments: EditNoteArguments(
+                      Note(
+                        notes[index]['title'].toString(),
+                        notes[index]['content'].toString(),
+                        id: notes[index]['id'],
+                        image: notes[index]['image']
+                      )
+                  )
+
+              );
             },
           )
         ],

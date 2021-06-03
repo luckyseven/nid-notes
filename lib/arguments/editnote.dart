@@ -1,7 +1,7 @@
 import 'package:nid_notes/models/note.dart';
 
-class EditNote {
+class EditNoteArguments {
   Note? note;
 
-  EditNote([this.note]);
+  EditNoteArguments([this.note]);
 }
