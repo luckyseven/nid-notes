@@ -88,31 +88,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _cardNote(int index){
     return Card(
-      child: Row(
+      child: Column(
         children: [
-          Flexible(
-            flex: 4,
-            child: _imageContainer(notes[index]["image"]),
+
+          Text(notes[index]["id"].toString() +
+              ' ' +
+              notes[index]["title"].toString()),
+          Text(notes[index]["content"].toString()),
+          _imageContainer(notes[index]["image"]),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () async {
+              DatabaseHelper db = DatabaseHelper();
+              await db.delete(notes[index]["id"]);
+              refreshList();
+              setState(() {});
+            },
           ),
-          Flexible(
-              flex: 8,
-              child: Column(
-                children: [
-                  Text(notes[index]["id"].toString() +
-                      ' ' +
-                      notes[index]["title"].toString()),
-                  Text(notes[index]["content"].toString()),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () async {
-                      DatabaseHelper db = DatabaseHelper();
-                      await db.delete(notes[index]["id"]);
-                      refreshList();
-                      setState(() {});
-                    },
-                  ),
-                ],
-              ))
         ],
       ),
     );
