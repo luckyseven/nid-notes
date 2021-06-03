@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:nid_notes/arguments/editnote.dart';
 import 'package:nid_notes/helper/database.dart';
 
 import '../models/note.dart';
@@ -15,6 +16,9 @@ class InsertScreen extends StatefulWidget {
 class _InsertScreenState extends State<InsertScreen> {
 
   final _insertFormKey = GlobalKey<FormState>();
+  final titleController = TextEditingController();
+  final contentController = TextEditingController();
+
 
   String? _title;
   String? _content;
@@ -26,6 +30,17 @@ class _InsertScreenState extends State<InsertScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final args = ModalRoute.of(context)!.settings.arguments as EditNoteArguments;
+    if(args.note != null){
+      print(args.note!.title);
+      titleController.text = args.note!.title;
+      contentController.text =args.note!.content ?? '';
+      _image = args.note!.image;
+    }else{
+      print('nessun titolo inserito');
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Crea nota'),
@@ -60,6 +75,7 @@ class _InsertScreenState extends State<InsertScreen> {
                 children: [
                   _imageContainer(),
                   TextFormField(
+                    controller: titleController,
                     decoration: InputDecoration(
                       labelText: 'Titolo'
                     ),
@@ -74,6 +90,7 @@ class _InsertScreenState extends State<InsertScreen> {
                     },
                   ),
                   TextFormField(
+                    controller: contentController,
                     decoration: InputDecoration(
                         labelText: 'Contenuto'
                     ),
@@ -118,9 +135,9 @@ class _InsertScreenState extends State<InsertScreen> {
   }
 
   Widget _imageContainer() {
-    return _imageFile == null
+    return _image == null
         ? Text('No image selected.')
-        : Image.file(_imageFile!);
+        : Image.memory(base64.decode(_image!));
   }
 
 }
