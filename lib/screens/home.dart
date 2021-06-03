@@ -66,9 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});//set state solo per refresh della schermata
   }
 
-  Widget _imageContainer(String? image) {
-    if (image != null) {
-      return Image.memory(base64.decode(image));
+  Widget _imageContainer(String? _imagePath) {
+    if (_imagePath != null) {
+      return Image.memory(base64.decode(_imagePath));
     }
     return SizedBox.shrink();
   }
@@ -108,13 +108,15 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () async {
               Navigator.of(context).pushNamed('/insert',
                   arguments: EditNoteArguments(
-                    Note(
+                      Note(
                         notes[index]['title'].toString(),
                         notes[index]['content'].toString(),
                         id: notes[index]['id'],
                         image: notes[index]['image']
-                    )
-                  ));
+                      )
+                  )
+
+              );
             },
           )
         ],
