@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:nid_notes/arguments/editnote.dart';
 import 'package:nid_notes/helper/database.dart';
 import 'package:nid_notes/blocs/user_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
+import 'package:nid_notes/models/note.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -61,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
   //interroga il dp ed estrae tutti gli oggetti che ci sono, tutte mappe chiave-valore
   refreshList() async {
     DatabaseHelper db = DatabaseHelper();
-    //Aggiorno la variabile note che conterrà sempre tutte le note
     notes = await db.queryAllRows();
     setState(() {});//set state solo per refresh della schermata
   }
@@ -73,8 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SizedBox.shrink();
   }
 
-  //Widget per card diverse
-  Widget _gridView(){
+  Widget _gridView() {
     return new StaggeredGridView.countBuilder(
       crossAxisCount: 4,
       itemCount: notes.length,
@@ -105,9 +104,21 @@ class _HomeScreenState extends State<HomeScreen> {
               setState(() {});
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () async {
+              Navigator.of(context).pushNamed('/insert', arguments: EditNote(
+                  Note(notes[index]["title"].toString(), notes[index]["content"].toString(), id: notes[index]["id"], image: notes[index]["image"]),
+              ));
+            },
+          )
         ],
       ),
     );
   }
 
+
 }
+
+
+
