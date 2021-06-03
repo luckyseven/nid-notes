@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:nid_notes/models/user.dart';
+import 'package:nid_notes/helper/database.dart';
 import 'package:nid_notes/blocs/user_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -8,6 +10,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //Lista di oggetti mappa stringa per il primo valore e dynamic per il secondo.
+  List<Map<String, dynamic>> notes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    refreshList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,23 +25,87 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    userBloc.logout();
-                    Navigator.of(context).pushReplacementNamed('/login');
-                  },
-                  child: Text('Logout'),
-                )
-              ],
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/insert');
+        },
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 10,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: GridView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 3 / 2,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20),
+                  itemCount: notes.length,
+                  itemBuilder: (BuildContext ctx, index) {
+                    return Card(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            flex: 4,
+                            child: _imageContainer(notes[index]["image"]),
+                          ),
+                          Flexible(
+                              flex: 8,
+                              child: Column(
+                                children: [
+                                  Text(notes[index]["id"].toString() +
+                                      ' ' +
+                                      notes[index]["title"].toString()),
+                                  Text(notes[index]["content"].toString()),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () async {
+                                      DatabaseHelper db = DatabaseHelper();
+                                      await db.delete(notes[index]["id"]);
+                                      refreshList();
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ))
+                        ],
+                      ),
+                    );
+                  }),
             ),
           ),
-        ),
+          Flexible(
+            flex: 1,
+            child: ElevatedButton(
+              onPressed: () {
+                userBloc.logout();
+                Navigator.of(context).pushReplacementNamed('/login');
+              },
+              child: Text('Logout'),
+            ),
+          )
+        ],
       ),
     );
+  }
+
+  //Metodo che istanzia il dbhelper(della cartella helper)
+  //interroga il dp ed estrae tutti gli oggetti che ci sono, tutte mappe chiave-valore
+  refreshList() async {
+    DatabaseHelper db = DatabaseHelper();
+    notes = await db.queryAllRows();
+    setState(() {});//set state solo per refresh della schermata
+  }
+
+  Widget _imageContainer(String? image) {
+    if (image != null) {
+      return Image.memory(base64.decode(image));
+    }
+    return SizedBox.shrink();
   }
 }
