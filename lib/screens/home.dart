@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
       itemCount: notes.length,
       itemBuilder: (BuildContext context, int index) => _cardNote(index),
       staggeredTileBuilder: (int index) =>
-      new StaggeredTile.count(2, index.isEven ? 2 : 1),
+      new StaggeredTile.fit(2),
       mainAxisSpacing: 4.0,
       crossAxisSpacing: 4.0,
     );
