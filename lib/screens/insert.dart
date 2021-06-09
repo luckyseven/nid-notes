@@ -28,18 +28,23 @@ class _InsertScreenState extends State<InsertScreen> {
   String? _imagePath;
   final picker = ImagePicker();
 
+  var args;
+
   @override
   Widget build(BuildContext context) {
 
-    final args = ModalRoute.of(context)!.settings.arguments as EditNoteArguments;
+    if (args == null) {
+      args = ModalRoute.of(context)!.settings.arguments;
 
-    if(args.note != null) {
-      print(args.note!.title);
-      titleController.text = args.note!.title;
-      contentController.text = args.note!.content ?? '';
-      _image = args.note!.image;
-    } else {
-      print('Nessun titolo');
+      if(args != null && args.note != null) {
+        args = args as EditNoteArguments;
+        print(args.note!.title);
+        titleController.text = args.note!.title;
+        contentController.text = args.note!.content ?? '';
+        _image = args.note!.image;
+      } else {
+        print('Nessun titolo');
+      }
     }
 
     return Scaffold(
@@ -57,7 +62,7 @@ class _InsertScreenState extends State<InsertScreen> {
                       note.image = _image;
                     }
                     DatabaseHelper db = DatabaseHelper();
-                    if(args.note!.id != null){
+                    if(args != null && args.note!.id != null){
                       note.id = args.note!.id;
                       db.update(note).then((value) => Navigator.of(context).pushReplacementNamed('/home'));
                     } else{
