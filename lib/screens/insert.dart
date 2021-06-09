@@ -64,9 +64,9 @@ class _InsertScreenState extends State<InsertScreen> {
                     DatabaseHelper db = DatabaseHelper();
                     if(args != null && args.note!.id != null){
                       note.id = args.note!.id;
-                      db.update(note).then((value) => Navigator.of(context).pushReplacementNamed('/home'));
+                      db.update(note).then((value) => Navigator.of(context).pop());
                     } else{
-                      db.insert(note).then((value) => Navigator.of(context).pushReplacementNamed('/home'));
+                      db.insert(note).then((value) => Navigator.of(context).pop());
                     }
                   }
                 },

@@ -25,6 +25,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: Drawer(
+          // Add a ListView to the drawer. This ensures the user can scroll
+          // through the options in the drawer if there isn't enough vertical
+          // space to fit everything.
+          child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text('Ciao ' + userBloc.currentUser!.username! ),
+              ),
+              ListTile(
+                title: Text('Logout'),
+                onTap: () {
+                  userBloc.logout();
+                  Navigator.of(context).pushReplacementNamed('/login');
+                },
+              ),
+            ],
+          ),
+        ),
       appBar: AppBar(
         title: Text('Home'),
       ),
@@ -43,16 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _gridView(),
             ),
           ),
-          Flexible(
-            flex: 1,
-            child: ElevatedButton(
-              onPressed: () {
-                userBloc.logout();
-                Navigator.of(context).pushReplacementNamed('/login');
-              },
-              child: Text('Logout'),
-            ),
-          )
+
         ],
       ),
     );
