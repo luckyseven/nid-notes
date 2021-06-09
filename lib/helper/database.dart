@@ -16,7 +16,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'nid_notes.db');
     //creazione db viene creato una volta sola
     return await openDatabase(path,
-        version: 6,
+        version: 7,
         onCreate: _onCreate,//Prima volta viene eseguito create(tutta la creazione del db), le volte succesive solo l'upgrade(solo le modifiche nell'ultima versione)
         onUpgrade: _onUpgrade
     );
@@ -31,13 +31,14 @@ class DatabaseHelper {
             title TEXT NOT NULL,
             content TEXT NULL,
             image TEXT NULL,
+            favorite INTEGER DEFAULT 0,
           )
           ''');
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < newVersion) {
-      await db.execute("ALTER TABLE notes ADD COLUMN image TEXT;");
+      await db.execute("ALTER TABLE notes ADD COLUMN favorite INTEGER;");
     }
   }
 
@@ -64,5 +65,10 @@ class DatabaseHelper {
       // Pass the Dog's id as a whereArg to prevent SQL injection.
       whereArgs: [note.id],
     );
+  }
+  Future<void> favorite(Note note) async {
+    note.favorite=!note.favorite;
+    await this.update(note);
+    // Get a reference to the database.
   }
 }

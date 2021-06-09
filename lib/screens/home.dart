@@ -133,7 +133,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
               );
             },
-          )
+          ),
+          IconButton(
+            icon: Icon(notes[index]['favorite'] == 1 ? Icons.star : Icons.star_outline),
+            onPressed: () async {
+              DatabaseHelper db = DatabaseHelper();
+             var note = Note(
+                  notes[index]['title'].toString(),
+                  notes[index]['content'].toString(),
+                  id: notes[index]['id'],
+                  image: notes[index]['image'],
+                  favorite : notes[index]['favorite']
+              );
+              db.favorite(note);
+            },
+          ),
         ],
       ),
     );
