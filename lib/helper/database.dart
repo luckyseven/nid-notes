@@ -55,5 +55,14 @@ class DatabaseHelper {
     return (await database)!.rawDelete('DELETE FROM notes WHERE id = ' + id.toString());
   }
 
-
+  Future<void> update(Note note) async {
+    // Get a reference to the database.
+    (await database)!.update('notes',
+      note.toMap(),
+      // Ensure that the Dog has a matching id.
+      where: 'id = ?',
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [note.id],
+    );
+  }
 }
