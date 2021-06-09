@@ -17,7 +17,7 @@ class DatabaseHelper {
     //creazione db viene creato una volta sola
     return await openDatabase(path,
         version: 6,
-        onCreate: _onCreate,
+        onCreate: _onCreate,//Prima volta viene eseguito create(tutta la creazione del db), le volte succesive solo l'upgrade(solo le modifiche nell'ultima versione)
         onUpgrade: _onUpgrade
     );
   }
@@ -55,5 +55,14 @@ class DatabaseHelper {
     return (await database)!.rawDelete('DELETE FROM notes WHERE id = ' + id.toString());
   }
 
-
+  Future<void> update(Note note) async {
+    // Get a reference to the database.
+    (await database)!.update('notes',
+      note.toMap(),
+      // Ensure that the Dog has a matching id.
+      where: 'id = ?',
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [note.id],
+    );
+  }
 }

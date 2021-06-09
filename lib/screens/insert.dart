@@ -57,7 +57,12 @@ class _InsertScreenState extends State<InsertScreen> {
                       note.image = _image;
                     }
                     DatabaseHelper db = DatabaseHelper();
-                    db.insert(note).then((value) => Navigator.of(context).pushReplacementNamed('/home'));
+                    if(args.note!.id != null){
+                      note.id = args.note!.id;
+                      db.update(note).then((value) => Navigator.of(context).pushReplacementNamed('/home'));
+                    } else{
+                      db.insert(note).then((value) => Navigator.of(context).pushReplacementNamed('/home'));
+                    }
                   }
                 },
                 child: Icon(
