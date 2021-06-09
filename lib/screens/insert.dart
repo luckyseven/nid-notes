@@ -54,7 +54,7 @@ class _InsertScreenState extends State<InsertScreen> {
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (_insertFormKey.currentState!.validate()) {
                     _insertFormKey.currentState!.save();
                     Note note = Note(_title!, _content);
@@ -64,9 +64,10 @@ class _InsertScreenState extends State<InsertScreen> {
                     DatabaseHelper db = DatabaseHelper();
                     if(args != null && args.note!.id != null){
                       note.id = args.note!.id;
-                      db.update(note).then((value) => Navigator.of(context).pop());
+                      note.favorite = args.note!.favorite;
+                      await db.update(note).then((value) => Navigator.of(context).pushReplacementNamed('/home'));
                     } else{
-                      db.insert(note).then((value) => Navigator.of(context).pop());
+                      await db.insert(note).then((value) => Navigator.of(context).pushReplacementNamed('/home'));
                     }
                   }
                 },

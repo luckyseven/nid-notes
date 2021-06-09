@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         drawer: Drawer(
           // Add a ListView to the drawer. This ensures the user can scroll
@@ -127,7 +128,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         notes[index]['title'].toString(),
                         notes[index]['content'].toString(),
                         id: notes[index]['id'],
-                        image: notes[index]['image']
+                        image: notes[index]['image'],
+                        favorite: notes[index]['favorite'] == 1 ? true : false
                       )
                   )
 
