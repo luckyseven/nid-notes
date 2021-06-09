@@ -143,9 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   notes[index]['content'].toString(),
                   id: notes[index]['id'],
                   image: notes[index]['image'],
-                  favorite : notes[index]['favorite']
+                  favorite : notes[index]['favorite'] == 1
               );
-              db.favorite(note);
+              await db.favorite(note);
+              refreshList();
+              setState(() {});
             },
           ),
         ],
